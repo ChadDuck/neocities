@@ -70,6 +70,10 @@ img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/ducki
     }
 }
 
+* {
+    user-select:none;
+}
+
 body {
     margin:0;
 }
