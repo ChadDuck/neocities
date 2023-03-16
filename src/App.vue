@@ -1,5 +1,6 @@
 <script>
 export default {
+    //
     data() {
         return {
             audioLink: "https://files.catbox.moe/9lryje.ogg",
@@ -56,8 +57,7 @@ export default {
 </script>
 
 <template lang="pug">
-div.duck
-    img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
+img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
 </template>
 
 <style lang="scss">
@@ -75,30 +75,19 @@ body {
 }
 
 #app {
-    width:100%;
-    height:100%;
+    width:100vw;
+    height:100vh;
 
     background-image: url("/img/29.gif");
     background-repeat: repeat;
     background-color: black;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
     
     color: #ffee56;
     font-family: arial;
-}
-
-div.duck {
-    width:100vh;
-    height:100vh;
-
-    margin:auto;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    flex-grow:1;
-
-    user-select:none;
 }
 
 img {
