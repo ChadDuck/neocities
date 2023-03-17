@@ -54,6 +54,7 @@ export default {
         await this.fetchAudio();
     },
 }
+// https://css-tricks.com/books/fundamental-css-tactics/infinite-scrolling-background-image/
 </script>
 
 <template lang="pug">
