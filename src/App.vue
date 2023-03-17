@@ -85,11 +85,11 @@ div.space {
     height:1000vh;
     position:absolute;
 
-    background-image: url("/img/29.gif");
-    background-repeat: repeat;
     background-color: black;
 
     &.space-slide {
+        background-image: url("/img/29.gif");
+        background-repeat: repeat;
         animation: space-slide 2s linear infinite;
     }
 }
