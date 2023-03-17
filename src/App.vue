@@ -22,27 +22,22 @@ export default {
             }
         },
 
-        checkBrowser(userAgent) {         
-            if (userAgent.match("/chrome|chromium|crios/i")) {
-                return "chrome";
-            }
-            if (userAgent.match("/firefox|fxios/i")) {
-                return "firefox";
-            }
-            if (userAgent.match("/safari/i")) {
-                return "safari";
-            }
-            if (userAgent.match("/opr\//i")) {
-                return "opera";
-            }
-            if (userAgent.match("/edg/i")) {
-                return "edge";
+        checkAgent(userAgent) {
+            switch (true) {
+                case userAgent.indexOf("edge") > -1: return "MS Edge";
+                case userAgent.indexOf("edg/") > -1: return "Edge ( chromium based)";
+                case userAgent.indexOf("opr") > -1 && !!window.opr: return "Opera";
+                case userAgent.indexOf("chrome") > -1 && !!window.chrome: return "Chrome";
+                case userAgent.indexOf("trident") > -1: return "MS IE";
+                case userAgent.indexOf("firefox") > -1: return "Mozilla Firefox";
+                case userAgent.indexOf("safari") > -1: return "Safari";
+                default: return false;
             }
         },
     },
 
-    created() {
-        this.browserName = this.checkBrowser(navigator.userAgent);
+    mounted() {
+        this.browserName = this.checkAgent(navigator.userAgent.toLowerCase());
         this.audioLink = this.browserName === 'safari' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
     }
 }
