@@ -1,8 +1,9 @@
 <script>
 export default {
+    // old .75 speed: https://files.catbox.moe/9lryje.ogg
     data() {
         return {
-            audioLink: "https://files.catbox.moe/9lryje.ogg",
+            audioLink: "https://files.catbox.moe/v3qnzq.ogg",
             audioBlob: false,
             duckClicked: false,
             duckInfoClicked: false,
