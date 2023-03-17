@@ -57,7 +57,9 @@ div.duck-box
 div.listen(v-if="duckClicked")
     img.listen(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
     Transition(name="link-slide")
-        a(v-if="duckInfoClicked" target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") Github
+        div.link-box(v-if="duckInfoClicked")
+            a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") Github
+            a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") Neocities
 div.space(:class="{ 'space-slide': duckClicked }")
 </template>
 
@@ -178,12 +180,20 @@ div.listen {
         cursor:help;
     }
 
-    & > a {
+    a {
         color:inherit;
         text-decoration:none;
         &:hover {
             color:#e2d34b;
         }
+    }
+
+    div.link-box {
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        gap:10px;
     }
 }
 </style>
