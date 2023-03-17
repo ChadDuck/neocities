@@ -1,4 +1,6 @@
 <script>
+import { Howl } from 'howler';
+
 export default {
     // old .75 speed: https://files.catbox.moe/9lryje.ogg
     data() {
@@ -15,8 +17,16 @@ export default {
     methods: {
         loadAudio() {
             // Javascript client-side loading bypasses hotlinking rule
-            this.audio = new Audio(this.audioLink);
-            this.audio.loop = true;
+            // Howler for seamless playback so I don't pull my hair out dealing with the js audio api
+            //
+            // old
+            // this.audio = new Audio(this.audioLink);
+            // this.audio.loop = true;
+            //
+            this.audio = new Howl({
+                src: [this.audioLink],
+                loop: true,
+            });
         },
 
         playAudio() {
