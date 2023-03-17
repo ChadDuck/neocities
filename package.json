@@ -10,13 +10,13 @@
     "upload": "node ./dev/upload.js"
   },
   "dependencies": {
-    "neocities": "^0.0.3",
     "pug": "^3.0.2",
     "sass": "^1.59.3",
     "vue": "^3.2.47"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
+    "neocities": "^0.0.3",
     "vite": "^4.1.4"
   }
 }
