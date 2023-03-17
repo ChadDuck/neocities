@@ -159,20 +159,20 @@ div.duck-box {
     }
 
     img.duck {
-    width:50px;
-    height:50px;
-    cursor: pointer;
-    transition: width .2s, height .2s;
+        width:50px;
+        height:50px;
+        cursor: pointer;
+        transition: width .2s, height .2s;
 
-    &:hover {
-        width:55px;
-        height:55px;
-    }
+        &:hover {
+            width:55px;
+            height:55px;
+        }
 
-    &.duck-rotate {
-        animation: duck-rotate 10s linear infinite;
+        &.duck-rotate {
+            animation: duck-rotate 10s linear infinite;
+        }
     }
-}
 }
 
 div.listen {
