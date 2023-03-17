@@ -25,8 +25,8 @@ export default {
 
 <template lang="pug">
 img.duck(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
-div.listen(v-if="duckClicked" @click="duckInfoClicked = !duckInfoClicked")
-    img.listen(src="/img/duck-listen.gif")
+div.listen(v-if="duckClicked")
+    img.listen(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
     Transition(name="link-slide")
         a(v-if="duckInfoClicked" target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") Github
 div.space(:class="{ 'space-slide': duckClicked }")
@@ -124,11 +124,10 @@ div.listen {
 
     width:fit-content;
 
-    cursor:help;
-
     & > img {
         width:100px;
         height:auto;
+        cursor:help;
     }
 
     & > a {
