@@ -58,7 +58,7 @@ export default {
 
 <template lang="pug">
 img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
-div.space
+div.space(:class="{ 'space-slide': duckClicked }")
 </template>
 
 <style lang="scss">
@@ -109,7 +109,9 @@ div.space {
     background-repeat: repeat;
     background-color: black;
 
-    animation: space-slide 2s linear infinite;
+    &.space-slide {
+        animation: space-slide 2s linear infinite;
+    }
 }
 
 img {
