@@ -28,7 +28,7 @@ img.duck(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/
 div.listen(v-if="duckClicked" @click="duckInfoClicked = !duckInfoClicked")
     img.listen(src="/img/duck-listen.gif")
     Transition(name="link-slide")
-        a(v-if="duckInfoClicked" href="https://github.com/ChadDuck/neocities") Github
+        a(v-if="duckInfoClicked" target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") Github
 div.space(:class="{ 'space-slide': duckClicked }")
 </template>
 
