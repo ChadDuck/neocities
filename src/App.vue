@@ -54,14 +54,22 @@ export default {
         await this.fetchAudio();
     },
 }
-// https://css-tricks.com/books/fundamental-css-tactics/infinite-scrolling-background-image/
 </script>
 
 <template lang="pug">
 img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
+div.space
 </template>
 
 <style lang="scss">
+@keyframes space-slide {
+    from {
+        transform: translate(0, 0);
+    }
+    to {
+        transform: translate(-165px, 190px);
+    }
+}
 @keyframes duck-rotate {
     from {
         transform: rotate(0deg);
@@ -77,15 +85,12 @@ img(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/ducki
 
 body {
     margin:0;
+    overflow:hidden;
 }
 
 #app {
     width:100vw;
     height:100vh;
-
-    background-image: url("/img/29.gif");
-    background-repeat: repeat;
-    background-color: black;
 
     display:flex;
     justify-content:center;
@@ -95,7 +100,20 @@ body {
     font-family: arial;
 }
 
+div.space {
+    width:1000vw;
+    height:1000vh;
+    position:absolute;
+
+    background-image: url("/img/29.gif");
+    background-repeat: repeat;
+    background-color: black;
+
+    animation: space-slide 2s linear infinite;
+}
+
 img {
+    z-index:99;
     width:50px;
     height:50px;
     cursor: pointer;
