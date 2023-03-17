@@ -39,7 +39,7 @@ export default {
 
     mounted() {
         this.browserName = this.checkAgent(navigator.userAgent.toLowerCase());
-        this.audioLink = this.browserName === 'iPhone' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
+        this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
     }
 }
 </script>
