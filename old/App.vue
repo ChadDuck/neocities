@@ -1,5 +1,6 @@
 <script>
 export default {
+    //
     data() {
         return {
             audioLink: "https://files.catbox.moe/9lryje.ogg",
@@ -10,6 +11,36 @@ export default {
     },
 
     methods: {
+        async fetchAudio() {
+            await fetch(this.audioLink)
+            .then((response) => {
+                const reader = response.body.getReader();
+                    
+                return new ReadableStream({
+                    start(controller) {
+                        return pump();
+                        
+                        function pump() {
+                            return reader.read().then(({ done, value }) => {
+                                if (done) {
+                                    controller.close();
+                                    return;
+                                }
+                            
+                                controller.enqueue(value);
+                                
+                                return pump();
+                            });
+                        }
+                    },
+                })
+
+            })
+            .then((stream) => new Response(stream))
+            .then((response) => response.blob())
+            .then((blob) => this.audioBlob = URL.createObjectURL(blob))
+        },
+
         playAudio() {
             // Javascript client-side loading bypasses hotlinking rule
             if (!this.duckClicked) {
@@ -19,6 +50,10 @@ export default {
                 audio.play();
             }
         },
+    },
+
+    async mounted() {
+        // await this.fetchAudio();
     },
 }
 </script>
