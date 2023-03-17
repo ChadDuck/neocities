@@ -37,7 +37,7 @@ export default {
                 case userAgent.indexOf("firefox") > -1: return "Firefox";
 
                 case userAgent.indexOf("safari") > -1: return "Safari";
-                
+
                 default: return false;
             }
         },
@@ -51,7 +51,9 @@ export default {
 </script>
 
 <template lang="pug">
-img.duck(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
+div.duck-box
+    img.bubble(v-if="!duckClicked" src="/img/clickme-animated.gif")
+    img.duck(@click="playAudio()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
 div.listen(v-if="duckClicked")
     img.listen(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
     Transition(name="link-slide")
@@ -121,7 +123,25 @@ div.space {
     }
 }
 
-img.duck {
+div.duck-box {
+    width:fit-content;
+    height:fit-content;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+
+    img.bubble {
+        position:absolute;
+        top:-50px;
+        width:auto;
+        height:50px;
+    }
+
+    img.duck {
     width:50px;
     height:50px;
     cursor: pointer;
@@ -135,6 +155,7 @@ img.duck {
     &.duck-rotate {
         animation: duck-rotate 10s linear infinite;
     }
+}
 }
 
 div.listen {
