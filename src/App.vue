@@ -3,10 +3,11 @@ export default {
     // old .75 speed: https://files.catbox.moe/9lryje.ogg
     data() {
         return {
-            audioLink: "https://files.catbox.moe/v3qnzq.ogg",
+            audioLink: false,
             audioBlob: false,
             duckClicked: false,
             duckInfoClicked: false,
+            browserName: false,
         }
     },
 
@@ -20,7 +21,30 @@ export default {
                 audio.play();
             }
         },
+
+        checkBrowser(userAgent) {         
+            if (userAgent.match("/chrome|chromium|crios/i")) {
+                return "chrome";
+            }
+            if (userAgent.match("/firefox|fxios/i")) {
+                return "firefox";
+            }
+            if (userAgent.match("/safari/i")) {
+                return "safari";
+            }
+            if (userAgent.match("/opr\//i")) {
+                return "opera";
+            }
+            if (userAgent.match("/edg/i")) {
+                return "edge";
+            }
+        },
     },
+
+    created() {
+        this.browserName = this.checkBrowser(navigator.userAgent);
+        this.audioLink = this.browserName === 'safari' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
+    }
 }
 </script>
 
