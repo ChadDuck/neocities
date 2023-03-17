@@ -5,6 +5,7 @@ export default {
         return {
             audioLink: false,
             audioBlob: false,
+            audio: false,
             duckClicked: false,
             duckInfoClicked: false,
             browserName: false,
@@ -12,13 +13,16 @@ export default {
     },
 
     methods: {
-        playAudio() {
+        loadAudio() {
             // Javascript client-side loading bypasses hotlinking rule
+            this.audio = new Audio(this.audioLink);
+            this.audio.loop = true;
+        },
+
+        playAudio() {
             if (!this.duckClicked) {
                 this.duckClicked = true;
-                let audio = new Audio(this.audioLink);
-                audio.loop = true;
-                audio.play();
+                this.audio.play();
             }
         },
 
@@ -46,6 +50,7 @@ export default {
     mounted() {
         this.browserName = this.checkAgent(navigator.userAgent.toLowerCase());
         this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
+        this.loadAudio();
     }
 }
 </script>
