@@ -26,7 +26,7 @@ export default {
             switch (true) {
                 case userAgent.indexOf("edge") > -1: return "MS Edge";
                 case userAgent.indexOf("edg/") > -1: return "Edge ( chromium based)";
-                case userAgent.indexOf("iphone") > -1: return "iPhone";
+                // case userAgent.indexOf("iphone") > -1: return "iPhone";
                 case userAgent.indexOf("opr") > -1 && !!window.opr: return "Opera";
                 case userAgent.indexOf("chrome") > -1 && !!window.chrome: return "Chrome";
                 case userAgent.indexOf("trident") > -1: return "MS IE";
