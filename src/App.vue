@@ -16,7 +16,7 @@ export default {
                 'star.gif',
                 'star1.gif',
                 'star3ytu.gif',
-                'stAr88.gif',
+                'StAr88.gif',
             ],
             speedSelect: [],
             sizeSelect: [0, 0, '15px', '25px', '30px', '35px'],
