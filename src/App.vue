@@ -177,6 +177,7 @@ export default {
                 this.duckClicked = true;
                 this.audio.play();
                 this.genSpeedValues();
+                document.title = 'space duck';
 
                 setInterval(() => this.animateStars(), 15)
             }
