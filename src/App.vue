@@ -19,6 +19,8 @@ export default {
                 'stAr88.gif',
             ],
             speedSelect: [],
+            sizeSelect: [0, 0, '15px', '25px', '30px', '35px'],
+            layerSelect: [0, 0, 97, 98, 100, 101],
             windowResize: false,
         }
     },
@@ -45,18 +47,17 @@ export default {
         },
 
         genStarCSS(ele, init = false) {
-            let style;
+            let style = {
+                position: 'absolute',
+                'z-index': this.layerSelect[Number(ele.getAttribute('data-speed'))],
+                height: this.sizeSelect[Number(ele.getAttribute('data-speed'))],
+            };
 
             if (init) {
-                style = {
-                    position: 'absolute',
-                    top: this.getRanNum(10, window.innerHeight) + 'px',
-                    left: this.getRanNum(10, window.innerWidth) + 'px',
-                    'z-index': Math.floor(Math.random() * (98 - 1)),
-                }
+                style.top = this.getRanNum(10, window.innerHeight) + 'px';
+                style.left = this.getRanNum(10, window.innerWidth) + 'px';
             } else {
                 let pos;
-
                 // Check if width smaller than height and flip behavior
                 let genMethod = (window.innerHeight > window.innerWidth) ? !!!this.getRanNum(0, 3) : !!this.getRanNum(0, 3);
                 
@@ -72,12 +73,8 @@ export default {
                     }
                 }
 
-                style = {
-                    position: 'absolute',
-                    top: pos.top,
-                    left: pos.left,
-                    'z-index': Math.floor(Math.random() * (98 - 1)),
-                };
+                style.top = pos.top;
+                style.left = pos.left;
             }
 
             for (const prop in style) {
@@ -110,6 +107,8 @@ export default {
             let star = new Image();
             star.src = '/img/' + ranStar;
             star.classList.add('visStars');
+
+            // data speed controls the size and index values, set in genStarCSS
             star.setAttribute('data-speed', this.getRanNum(2, 6));
             star = this.genStarCSS(star, init);
 
