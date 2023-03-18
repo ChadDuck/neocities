@@ -206,7 +206,6 @@ div.listen(v-if="duckClicked")
         div.link-box(v-if="duckInfoClicked")
             a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") github
             a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") neocities
-            img(src='/img/StAr88.gif')
 div.space( :class="{ 'space-slide': duckClicked }")
 </template>
 
@@ -326,7 +325,7 @@ div.listen {
         width:100px;
         height:auto;
         cursor:help;
-        
+
         z-index:111;
     }
 
