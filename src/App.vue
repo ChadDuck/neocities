@@ -2,6 +2,8 @@
 import { Howl } from 'howler';
 import range from 'lodash.range';
 
+import { checkAgent, getRanNum } from './assets/extras.js';
+
 export default {
     data() {
         return {
@@ -21,9 +23,16 @@ export default {
                 'caman_star.gif',
                 'Star01.gif',
             ],
-            speedSelect: [],
-            sizeSelect: [0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
-            layerSelect: [0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
+            config: {
+                speed: [],
+                size: [0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
+                layer: [0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
+
+                // division by multiplication against window.innerWidth, used in calcStarAmount.
+                // 1 means star amount is equal to your width size, e.g. 1920 stars for 1920x1080
+                // becomes a lagfest after 0.3 - 0.5 (on 4k, runs a little better on lower res)
+                amount: 5, 
+            },
         }
     },
 
@@ -42,25 +51,19 @@ export default {
             });
         },
 
-        getRanNum(min, max) {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.round(Math.random() * (max - min) + min);
-        },
-
         genStarCSS(ele, init = false) {
             let winX = window.innerWidth;
             let winY = window.innerHeight;
 
             let style = {
                 position: 'absolute',
-                'z-index': this.layerSelect[Number(ele.getAttribute('data-speed'))],
-                height: this.sizeSelect[Number(ele.getAttribute('data-speed'))],
+                'z-index': this.config.layer[Number(ele.getAttribute('data-speed'))],
+                height: this.config.size[Number(ele.getAttribute('data-speed'))],
             };
 
             if (init) {
-                style.top = this.getRanNum(10, winY) + 'px';
-                style.left = this.getRanNum(10, winX) + 'px';
+                style.top = getRanNum(10, winY) + 'px';
+                style.left = getRanNum(10, winX) + 'px';
             } else {
                 let pos;
                 let winPercent;
@@ -69,23 +72,23 @@ export default {
                 // Percentage chance for star spawn based on window size
                 if (winX > winY) {
                     winPercent = Math.round(((winY / winX) * 100) * 0.5);
-                    genChance = !!(this.getRanNum(0, 100) > winPercent);
+                    genChance = !!(getRanNum(0, 100) > winPercent);
                 } else if (winY > winX) {
                     winPercent = Math.round(((winX / winY) * 100) * 0.5);
-                    genChance = !!!(this.getRanNum(0, 100) > winPercent);
+                    genChance = !!!(getRanNum(0, 100) > winPercent);
                 } else {
-                    genChance = !!this.getRanNum(0, 1);
+                    genChance = !!getRanNum(0, 1);
                 }
                 
                 if (genChance) {
                     pos = {
-                        top: '-' + this.getRanNum(25, 100) + 'px',
-                        left: this.getRanNum(25, window.innerWidth + 100) + 'px',
+                        top: '-' + getRanNum(25, 100) + 'px',
+                        left: getRanNum(25, window.innerWidth + 100) + 'px',
                     }
                 } else {
                     pos = {
-                        top: this.getRanNum(0, window.innerHeight - 100) + 'px',
-                        left: this.getRanNum(window.innerWidth + 25, window.innerWidth + 100) + 'px',
+                        top: getRanNum(0, window.innerHeight - 100) + 'px',
+                        left: getRanNum(window.innerWidth + 25, window.innerWidth + 100) + 'px',
                     }
                 }
 
@@ -105,24 +108,40 @@ export default {
         // Might rework
         genSpeedValues() {
             // will produce 2 useless values but it's okay
-            range(0, this.sizeSelect.length).forEach((ele, index) => {
-                this.speedSelect.push(ele);
+            range(0, this.config.size.length).forEach((ele, index) => {
+                this.config.speed.push(ele);
             })
         },
 
         calcStarAmount() {
-            return Math.round(window.innerWidth * 0.04);
+            return Math.round(window.innerWidth * (this.config.amount * 0.01));
+        },
+
+        changeStarAmount() {
+            console.log(this.config.amount)
+            let visStars = document.querySelectorAll('.visStars');
+            let newAmount = this.calcStarAmount();
+            if (newAmount > visStars.length) {
+                for (let i = 0; i < newAmount - visStars.length; i++) {
+                    this.genStar(true);
+                }
+            } else {
+                for (let i = 0; i < visStars.length - newAmount; i++) {
+                    visStars[getRanNum(0, visStars.length - 1)].remove();
+                }
+            }
+            console.log(this.config.amount)
         },
 
         genStar(init) {
-            let ranStar = this.stars[this.getRanNum(0, this.stars.length - 1)];
+            let ranStar = this.stars[getRanNum(0, this.stars.length - 1)];
 
             let star = new Image();
             star.src = '/img/' + ranStar;
             star.classList.add('visStars');
 
             // data speed controls the size and layer values, set in genStarCSS
-            star.setAttribute('data-speed', this.getRanNum(1, this.sizeSelect.length - 1));
+            star.setAttribute('data-speed', getRanNum(1, this.config.size.length - 1));
 
             star = this.genStarCSS(star, init);
 
@@ -147,30 +166,10 @@ export default {
                     this.genStar(false);
                 } else {
                     // This is what I mean by unnecessary
-                    ele.style.top = (top + this.speedSelect[ele.getAttribute('data-speed')]) + 'px';
-                    ele.style.left = (left - this.speedSelect[ele.getAttribute('data-speed')]) + 'px';
+                    ele.style.top = (top + this.config.speed[ele.getAttribute('data-speed')]) + 'px';
+                    ele.style.left = (left - this.config.speed[ele.getAttribute('data-speed')]) + 'px';
                 }
             });
-        },
-
-        checkAgent(userAgent) {
-            switch (true) {
-                case userAgent.indexOf("edge") > -1: return "EdgeOG";
-
-                case userAgent.indexOf("edg/") > -1: return "Edge";
-
-                case userAgent.indexOf("opr") > -1 && !!window.opr: return "Opera";
-
-                case userAgent.indexOf("chrome") > -1 && !!window.chrome: return "Chrome";
-
-                case userAgent.indexOf("trident") > -1: return "IE";
-
-                case userAgent.indexOf("firefox") > -1: return "Firefox";
-
-                case userAgent.indexOf("safari") > -1: return "Safari";
-
-                default: return false;
-            }
         },
 
         onResize() {
@@ -196,10 +195,14 @@ export default {
                 setInterval(() => this.animateStars(), 16) // close to 60fps
             }
         },
+
+        test(e) {
+            console.log(e);
+        }
     },
 
     mounted() {
-        this.browserName = this.checkAgent(navigator.userAgent.toLowerCase());
+        this.browserName = checkAgent(navigator.userAgent.toLowerCase());
 
         // old .75 speed: https://files.catbox.moe/9lryje.ogg
         // old .80 speed: https://files.catbox.moe/v3qnzq.ogg
@@ -215,12 +218,17 @@ export default {
 div.duck-box
     img.bubble(v-if="!duckClicked" src="/img/clickme-animated.gif")
     img.duck(@click="duckClick()" :class="{ 'duck-rotate': duckClicked }" src="/img/duckie-transparent.gif")
-div.listen(v-if="duckClicked")
-    img(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
-    Transition(name="link-slide")
-        div.link-box(v-if="duckInfoClicked")
-            a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") github
-            a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") neocities
+
+template(v-if='duckClicked')
+    div.menu
+        div.options
+            input(@input="changeStarAmount()" type='range' v-model="config.amount" min="1" max="100" orient="vertical")
+        div.listen
+            img(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
+            Transition(name="link-slide")
+                div.link-box(v-if="duckInfoClicked")
+                    a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") github
+                    a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") neocities
 div.space( :class="{ 'space-slide': duckClicked }")
 </template>
 
@@ -281,7 +289,7 @@ div.space {
 
     &.space-slide {
         background: url("/img/SPACE22.gif") repeat;
-        animation: space-slide 4.5s linear infinite;
+        animation: space-slide 5s linear infinite;
     }
 }
 
@@ -321,12 +329,34 @@ div.duck-box {
     }
 }
 
-div.listen {
+div.menu {
     position:absolute;
     bottom:0;
     left:0;
     margin:5px;
 
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:flex-start;
+    gap:5px;
+
+    width:fit-content;
+
+    z-index:111;
+}
+
+div.options {
+    position:relative;
+    height:150px;
+    width:50px;
+    input {
+        position:absolute;
+        transform: translate(-40px, 65px) rotate(-90deg); // I don't even know man, i'm gonna change this when I come back to this
+    }
+}
+
+div.listen {
     display:flex;
     flex-direction:row;
     justify-content:center;
@@ -336,16 +366,18 @@ div.listen {
     width:fit-content;
 
     & > img {
-        width:100px;
+        width:5vw;
+        max-width:100px;
         height:auto;
         cursor:help;
-
-        z-index:111;
     }
 
     a {
         color:inherit;
         text-decoration:none;
+        @media screen and (max-width: 768px) {
+            font-size:12px;
+        }
         &:hover {
             color:#e2d34b;
         }
@@ -354,7 +386,7 @@ div.listen {
     div.link-box {
         display:flex;
         flex-direction:column;
-        justify-content:center;
+        justify-content:space-around;
         align-items:center;
         gap:10px;
     }
