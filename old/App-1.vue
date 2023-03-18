@@ -46,13 +46,10 @@ export default {
         getRanNum(min, max) {
             min = Math.ceil(min);
             max = Math.floor(max);
-            return Math.round(Math.random() * (max - min) + min);
+            return Math.floor(Math.random() * (max - min) + min);
         },
 
         genStarCSS(ele, init = false) {
-            let winX = window.innerWidth;
-            let winY = window.innerHeight;
-
             let style = {
                 position: 'absolute',
                 'z-index': this.layerSelect[Number(ele.getAttribute('data-speed'))],
@@ -60,25 +57,22 @@ export default {
             };
 
             if (init) {
-                style.top = this.getRanNum(10, winY) + 'px';
-                style.left = this.getRanNum(10, winX) + 'px';
+                style.top = this.getRanNum(10, window.innerHeight) + 'px';
+                style.left = this.getRanNum(10, window.innerWidth) + 'px';
             } else {
                 let pos;
-                let winPercent;
-                let genChance;
 
-                // Percentage chance for star spawn based on window size
-                if (winX > winY) {
-                    winPercent = Math.round(((winY / winX) * 100) * 0.5);
-                    genChance = !!(this.getRanNum(0, 100) > winPercent);
-                } else if (winY > winX) {
-                    winPercent = Math.round(((winY / winX) * 100) * 0.5);
-                    genChance = !!!(this.getRanNum(0, 100) > winPercent);
-                } else {
-                    genChance = !!this.getRanNum(0, 1);
+                // Check if width smaller than height and flip behavior
+                let genMethod;
+                if (window.innerHeight > (window.innerWidth + 100)) {
+                    genMethod = !!!this.getRanNum(0, 100)
+                } else if (range(window.innerWidth - 100, window.innerWidth + 100).indexOf(window.innerHeight) > -1) { // if somewhat 1:1
+                    genMethod = !!this.getRanNum(0, 2);
+                } else { // window.innerWidth > window.innerHeight
+                    genMethod = !!this.getRanNum(0, 3);
                 }
                 
-                if (genChance) {
+                if (genMethod) {
                     pos = {
                         top: '-' + this.getRanNum(25, 100) + 'px',
                         left: this.getRanNum(25, window.innerWidth + 100) + 'px',
@@ -109,27 +103,24 @@ export default {
         },
 
         calcStarAmount() {
-            console.log(Math.round(window.innerWidth * 0.05));
-            return Math.round(window.innerWidth * 0.05);
-            // switch(true) {
-            //     case window.innerWidth > 768: return 50;
-            //     case window.innerWidth > 1000: return 75;
-            //     case window.innerWidth > 1500: return 100;
-            //     case window.innerWidth > 2000: return 200;
-            //     case window.innerWidth > 3000: return 250;
-            //     default: return 25;
-            // }
+            switch(true) {
+                case window.innerWidth > 768: return 100;
+                case window.innerWidth > 1000: return 150;
+                case window.innerWidth > 2000: return 200;
+                case window.innerWidth > 3000: return 250;
+                default: return 50;
+            }
         },
 
         genStar(init) {
-            let ranStar = this.stars[this.getRanNum(0, this.stars.length - 1)];
+            let ranStar = this.stars[this.getRanNum(0, this.stars.length)];
 
             let star = new Image();
             star.src = '/img/' + ranStar;
             star.classList.add('visStars');
 
             // data speed controls the size and index values, set in genStarCSS
-            star.setAttribute('data-speed', this.getRanNum(2, 5));
+            star.setAttribute('data-speed', this.getRanNum(2, 6));
             star = this.genStarCSS(star, init);
 
             document.body.appendChild(star);
