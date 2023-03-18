@@ -15,8 +15,12 @@ export default {
                 'starwow.gif',
                 'star.gif',
                 'star1.gif',
+                'star2.gif',
+                'star_blue.gif',
                 'star3ytu.gif',
-                'StAr88.gif',
+                'anistar.gif',
+                'caman_star.gif',
+                'Star01.gif',
             ],
             speedSelect: [],
             sizeSelect: [0, 0, '15px', '25px', '30px', '35px'],
@@ -102,7 +106,7 @@ export default {
         },
 
         genStar(init) {
-            let ranStar = this.stars[Math.floor(Math.random() * (this.stars.length - 1))];
+            let ranStar = this.stars[this.getRanNum(0, this.stars.length)];
 
             let star = new Image();
             star.src = '/img/' + ranStar;
@@ -202,6 +206,7 @@ div.listen(v-if="duckClicked")
         div.link-box(v-if="duckInfoClicked")
             a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") github
             a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") neocities
+            img(src='/img/StAr88.gif')
 div.space( :class="{ 'space-slide': duckClicked }")
 </template>
 
@@ -321,6 +326,8 @@ div.listen {
         width:100px;
         height:auto;
         cursor:help;
+        
+        z-index:111;
     }
 
     a {
