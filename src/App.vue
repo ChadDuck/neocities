@@ -25,7 +25,6 @@ export default {
             speedSelect: [],
             sizeSelect: [0, 0, '15px', '25px', '30px', '35px'],
             layerSelect: [0, 0, 97, 98, 100, 101],
-            windowResize: false,
         }
     },
 
