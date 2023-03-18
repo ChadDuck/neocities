@@ -62,8 +62,16 @@ export default {
                 style.left = this.getRanNum(10, window.innerWidth) + 'px';
             } else {
                 let pos;
+
                 // Check if width smaller than height and flip behavior
-                let genMethod = (window.innerHeight > window.innerWidth) ? !!!this.getRanNum(0, 3) : !!this.getRanNum(0, 3);
+                let genMethod;
+                if (window.innerHeight > (window.innerWidth + 100)) {
+                    genMethod = !!!this.getRanNum(0, 3)
+                } else if (range[window.innerWidth - 100, window.innerWidth + 100].indexOf(window.innerHeight) > -1) { // if somewhat 1:1
+                    genMethod = !!this.getRanNum(0, 2);
+                } else { // window.innerWidth > window.innerHeight
+                    genMethod = !!this.getRanNum(0, 3);
+                }
                 
                 if (genMethod) {
                     pos = {
