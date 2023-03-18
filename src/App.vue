@@ -58,7 +58,8 @@ export default {
             } else {
                 let pos;
 
-                if (!!this.getRanNum(0, 2)) {
+                // increase chances of top side generation 2:1 as most monitors are 16:9
+                if (!!this.getRanNum(0, 3)) {
                     pos = {
                         top: '-' + this.getRanNum(25, 100) + 'px',
                         left: this.getRanNum(25, window.innerWidth + 100) + 'px',
