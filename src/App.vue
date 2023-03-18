@@ -3,7 +3,6 @@ import { Howl } from 'howler';
 import range from 'lodash.range';
 
 export default {
-    // old .75 speed: https://files.catbox.moe/9lryje.ogg
     data() {
         return {
             audioLink: false,
@@ -23,8 +22,8 @@ export default {
                 'Star01.gif',
             ],
             speedSelect: [],
-            sizeSelect: [0, 0, '15px', '25px', '30px', '35px'],
-            layerSelect: [0, 0, 97, 98, 100, 101],
+            sizeSelect: [0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
+            layerSelect: [0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
         }
     },
 
@@ -101,24 +100,18 @@ export default {
             return ele;
         },
 
+        // This function is not needed since the rework made data-speed match pixel movement
+        // so, right now, it's unnecessary complexity :/
+        // Might rework
         genSpeedValues() {
             // will produce 2 useless values but it's okay
-            range(0, 9).forEach((ele, index) => {
+            range(0, this.sizeSelect.length).forEach((ele, index) => {
                 this.speedSelect.push(ele);
             })
         },
 
         calcStarAmount() {
-            console.log(Math.round(window.innerWidth * 0.05));
-            return Math.round(window.innerWidth * 0.05);
-            // switch(true) {
-            //     case window.innerWidth > 768: return 50;
-            //     case window.innerWidth > 1000: return 75;
-            //     case window.innerWidth > 1500: return 100;
-            //     case window.innerWidth > 2000: return 200;
-            //     case window.innerWidth > 3000: return 250;
-            //     default: return 25;
-            // }
+            return Math.round(window.innerWidth * 0.04);
         },
 
         genStar(init) {
@@ -128,8 +121,9 @@ export default {
             star.src = '/img/' + ranStar;
             star.classList.add('visStars');
 
-            // data speed controls the size and index values, set in genStarCSS
-            star.setAttribute('data-speed', this.getRanNum(2, 5));
+            // data speed controls the size and layer values, set in genStarCSS
+            star.setAttribute('data-speed', this.getRanNum(1, this.sizeSelect.length - 1));
+
             star = this.genStarCSS(star, init);
 
             document.body.appendChild(star);
@@ -152,6 +146,7 @@ export default {
                     ele.remove();
                     this.genStar(false);
                 } else {
+                    // This is what I mean by unnecessary
                     ele.style.top = (top + this.speedSelect[ele.getAttribute('data-speed')]) + 'px';
                     ele.style.left = (left - this.speedSelect[ele.getAttribute('data-speed')]) + 'px';
                 }
@@ -198,14 +193,18 @@ export default {
                 this.audio.play();
                 this.genSpeedValues();
 
-                setInterval(() => this.animateStars(), 15)
+                setInterval(() => this.animateStars(), 16) // close to 60fps
             }
         },
     },
 
     mounted() {
         this.browserName = this.checkAgent(navigator.userAgent.toLowerCase());
-        this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/ozel9m.mp3" : "https://files.catbox.moe/v3qnzq.ogg";
+
+        // old .75 speed: https://files.catbox.moe/9lryje.ogg
+        // old .80 speed: https://files.catbox.moe/v3qnzq.ogg
+        this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/6t9cgy.mp3" : "https://files.catbox.moe/39x8z1.ogg";
+        
         window.addEventListener("resize", this.onResize);
         this.loadAudio();
     }
@@ -228,10 +227,10 @@ div.space( :class="{ 'space-slide': duckClicked }")
 <style lang="scss">
 @keyframes space-slide {
     from {
-        transform: translate(0, 0);
+        transform: translate(0px, 0px);
     }
     to {
-        transform: translate(-165px, 190px);
+        transform: translate(-304px, 234px);
     }
 }
 @keyframes duck-rotate {
@@ -281,8 +280,8 @@ div.space {
     background-color: black;
 
     &.space-slide {
-        background: url("/img/29.gif") repeat;
-        animation: space-slide 6s linear infinite;
+        background: url("/img/SPACE22.gif") repeat;
+        animation: space-slide 4.5s linear infinite;
     }
 }
 
