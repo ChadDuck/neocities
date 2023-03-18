@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "howler": "^2.2.3",
+    "lodash.range": "^3.2.0",
     "pug": "^3.0.2",
     "sass": "^1.59.3",
     "vue": "^3.2.47"
