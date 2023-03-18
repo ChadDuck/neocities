@@ -72,7 +72,7 @@ export default {
                     winPercent = Math.round(((winY / winX) * 100) * 0.5);
                     genChance = !!(this.getRanNum(0, 100) > winPercent);
                 } else if (winY > winX) {
-                    winPercent = Math.round(((winY / winX) * 100) * 0.5);
+                    winPercent = Math.round(((winX / winY) * 100) * 0.5);
                     genChance = !!!(this.getRanNum(0, 100) > winPercent);
                 } else {
                     genChance = !!this.getRanNum(0, 1);
