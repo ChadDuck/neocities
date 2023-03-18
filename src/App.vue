@@ -173,11 +173,11 @@ export default {
 
         async duckClick() {
             if (!this.duckClicked) {
+                document.title = 'space duck';
                 this.placeStars(this.calcStarAmount());
                 this.duckClicked = true;
                 this.audio.play();
                 this.genSpeedValues();
-                document.title = 'space duck';
 
                 setInterval(() => this.animateStars(), 15)
             }
