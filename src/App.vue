@@ -199,8 +199,8 @@ div.listen(v-if="duckClicked")
     img(src="/img/duck-listen.gif" @click="duckInfoClicked = !duckInfoClicked")
     Transition(name="link-slide")
         div.link-box(v-if="duckInfoClicked")
-            a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") Github
-            a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") Neocities
+            a(target="_blank" rel="noopener noreferrer" href="https://github.com/ChadDuck/neocities") github
+            a(target="_blank" rel="noopener noreferrer" href="https://neocities.org/") neocities
 div.space( :class="{ 'space-slide': duckClicked }")
 </template>
 
