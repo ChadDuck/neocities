@@ -58,8 +58,10 @@ export default {
             } else {
                 let pos;
 
-                // increase chances of top side generation 2:1 as most monitors are 16:9
-                if (!!this.getRanNum(0, 3)) {
+                // Check if width smaller than height and flip behavior
+                let genMethod = (window.innerHeight > window.innerWidth) ? !!!this.getRanNum(0, 3) : !!this.getRanNum(0, 3);
+                
+                if (genMethod) {
                     pos = {
                         top: '-' + this.getRanNum(25, 100) + 'px',
                         left: this.getRanNum(25, window.innerWidth + 100) + 'px',
