@@ -53,7 +53,6 @@ export default {
                     top: this.getRanNum(10, window.innerHeight) + 'px',
                     left: this.getRanNum(10, window.innerWidth) + 'px',
                     'z-index': Math.floor(Math.random() * (98 - 1)),
-                    transition: 'all .05s linear',
                 }
             } else {
                 let pos;
@@ -78,7 +77,6 @@ export default {
                     top: pos.top,
                     left: pos.left,
                     'z-index': Math.floor(Math.random() * (98 - 1)),
-                    transition: 'all .05s linear',
                 };
             }
 
@@ -91,8 +89,8 @@ export default {
 
         genSpeedValues() {
             // will produce 2 useless values but it's okay
-            range(0, 10).forEach((ele, index) => {
-                this.speedSelect.push(ele * 2);
+            range(0, 9).forEach((ele, index) => {
+                this.speedSelect.push(ele);
             })
         },
 
@@ -112,7 +110,7 @@ export default {
             let star = new Image();
             star.src = '/img/' + ranStar;
             star.classList.add('visStars');
-            star.setAttribute('data-speed', this.getRanNum(3, 10));
+            star.setAttribute('data-speed', this.getRanNum(2, 6));
             star = this.genStarCSS(star, init);
 
             document.body.appendChild(star);
@@ -180,7 +178,7 @@ export default {
                 this.audio.play();
                 this.genSpeedValues();
 
-                setInterval(() => this.animateStars(), 50)
+                setInterval(() => this.animateStars(), 15)
             }
         },
     },
