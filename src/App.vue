@@ -67,7 +67,7 @@ export default {
                 let genMethod;
                 if (window.innerHeight > (window.innerWidth + 100)) {
                     genMethod = !!!this.getRanNum(0, 3)
-                } else if (range[window.innerWidth - 100, window.innerWidth + 100].indexOf(window.innerHeight) > -1) { // if somewhat 1:1
+                } else if (range(window.innerWidth - 100, window.innerWidth + 100).indexOf(window.innerHeight) > -1) { // if somewhat 1:1
                     genMethod = !!this.getRanNum(0, 2);
                 } else { // window.innerWidth > window.innerHeight
                     genMethod = !!this.getRanNum(0, 3);
