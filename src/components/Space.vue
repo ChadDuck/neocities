@@ -1,0 +1,206 @@
+<script>
+import { getRanNum } from '../assets/extras.js';
+
+export default {
+    props: [
+        'starAmount',
+    ],
+
+    data() {
+        return {
+            stars: [
+                'starwow.gif',
+                'star.gif',
+                'star1.gif',
+                'star2.gif',
+                'star_blue.gif',
+                'star3ytu.gif',
+                'anistar.gif',
+                'caman_star.gif',
+                'Star01.gif',
+            ],
+            config: {
+                // speed is set for each star ele as the data-speed attr
+                // speed: [],
+                size: [0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
+                layer: [0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
+                //
+                // division by multiplication against window.innerWidth, used in calcStarAmount.
+                // 100 means star amount is equal to your width size, e.g. 1920 stars for 1920x1080
+                // becomes a lagfest after 0.3 - 0.5 (on 4k, runs a little better on lower res)
+                // maximum amount is set by the range element in div.options
+                ranLength: false, // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
+            },
+            starInterval: false,
+            fps: 16,
+        }
+    },
+
+    methods: {
+        genStarCSS(ele, onScreen) { // called by genStar for init
+            let win = {
+                x: window.innerWidth,
+                y: window.innerHeight,
+            }
+            let style = {
+                position: 'absolute',
+                'z-index': this.config.layer[Number(ele.getAttribute('data-speed'))],
+                height: this.config.size[Number(ele.getAttribute('data-speed'))],
+            };
+            let starPos = {};
+
+            if (onScreen) {
+                starPos.top = getRanNum(10, win.y);
+                starPos.left = getRanNum(10, win.x);
+
+                style.top = starPos.top + 'px';
+                style.left = starPos.left + 'px';
+            } else {
+                let winPercent;
+                let genChance;
+
+                // Percentage chance for star spawn position based on window size
+                // gens a *rounded* whole number percentage, 50 if screen is 1:1 and inc/dec based on ratio
+                // once gen., casts a bool if getRanNum is greater than percentage; reversed if y > x.
+                if (win.x > win.y) {
+                    winPercent = Math.round(((win.y / win.x) * 100) * 0.5);
+                    genChance = !!(getRanNum(0, 100) > winPercent);
+                } else if (win.y > win.x) {
+                    winPercent = Math.round(((win.x / win.y) * 100) * 0.5);
+                    genChance = !!!(getRanNum(0, 100) > winPercent);
+                } else {
+                    genChance = !!getRanNum(0, 1);
+                }
+                
+                if (genChance) {
+                    starPos.top = Number('-' + getRanNum(25, 100));
+                    starPos.left = getRanNum(25, win.x + 100);
+
+                    style.top = starPos.top + 'px';
+                    style.left = starPos.left + 'px';
+                } else {
+                    starPos.top = getRanNum(0, win.y - 100);
+                    starPos.left = getRanNum(win.x + 25, win.x + 100);
+
+                    style.top = getRanNum(0, win.y - 100) + 'px';
+                    style.left = getRanNum(win.x + 25, win.x + 100) + 'px';
+                }
+            }
+
+            ele.setAttribute('data-top', starPos.top);
+            ele.setAttribute('data-left', starPos.left);
+
+            for (const prop in style) {
+                ele.style[prop] = style[prop];
+            }
+
+            return ele;
+        },
+
+        genStar(onScreen = false) {
+            let ranStar = this.stars[getRanNum(0, this.stars.length - 1)];
+
+            let star = new Image();
+            star.src = '/img/' + ranStar;
+            star.classList.add('visStars');
+
+            // data speed controls the size and layer values, set in genStarCSS
+            star.setAttribute('data-speed', getRanNum(1, this.config.ranLength - 1));
+
+            star = this.genStarCSS(star, onScreen);
+
+            document.getElementById('stars').appendChild(star);
+        },
+
+        // only used for initial page load
+        genStars(onScreen = false) {
+            for (let i = 0; i < this.starAmount; i++) {
+                this.genStar(onScreen);
+            }
+        },
+
+        // will add each star one by one as user changes range bar
+        // 
+        changeStarAmount() {
+            let visStars = document.querySelectorAll('.visStars');
+
+            if (this.starAmount > visStars.length) {
+                for (let i = 0; i < this.starAmount - visStars.length; i++) {
+                    this.genStar(true);
+                }
+            } else {
+                for (let i = 0; i < visStars.length - this.starAmount; i++) {
+                    visStars[getRanNum(0, visStars.length - 1)].remove();
+                }
+            }
+        },
+
+        animateStars() {
+            let visStars = document.querySelectorAll('.visStars');
+
+            visStars.forEach((ele) => {
+                // old
+                // let top = Number(ele.style.top.substring(0, ele.style.top.indexOf('px')));
+                // let left = Number(ele.style.left.substring(0, ele.style.left.indexOf('px')));
+
+                let top = Number(ele.getAttribute('data-top'));
+                let left = Number(ele.getAttribute('data-left'));
+
+                if (left < -100 || top > (window.innerHeight + 10)) { 
+                    ele.remove();
+                    this.genStar(false); // you can use '...arguments' here but keeping the same format for simplicity
+                } else {
+                    let newTop = top + Number(ele.getAttribute('data-speed'));
+                    let newLeft = left - Number(ele.getAttribute('data-speed'));
+
+                    ele.setAttribute('data-top', newTop);
+                    ele.setAttribute('data-left', newLeft);
+
+                    ele.style.top = newTop + 'px';
+                    ele.style.left = newLeft + 'px';
+                }
+            });
+        },
+
+        setAnimateLoop() {
+            clearInterval(this.starInterval);
+            this.starInterval = setInterval(() => this.animateStars(), 16);
+        },
+    },
+
+    mounted() {
+        this.config.ranLength = this.config.layer.length;
+
+        this.genStars(true);
+        this.setAnimateLoop();
+    },
+
+    beforeUnmount() {
+        clearInterval(this.starInterval);
+    },
+
+    watch: {
+        starAmount() {
+            this.changeStarAmount();
+        }
+    }
+}
+</script>
+
+<template lang="pug">
+div#stars
+</template>
+
+<style scoped lang="scss">
+div#stars {
+    position:absolute;
+    top:0;
+    left:0;
+    
+    margin:0;
+    padding:0;
+
+    width:100vw;
+    height:100vh;
+}
+</style>
