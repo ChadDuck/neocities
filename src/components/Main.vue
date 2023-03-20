@@ -31,20 +31,6 @@ export default {
             });
         },
 
-        // onResize() {
-        //     this.win.x = window.innerWidth;
-        //     this.win.y = window.innerHeight;
-
-        //     let visStars = document.querySelectorAll('.visStars');
-        //     if (visStars.length === 0) return;
-
-        //     visStars.forEach((ele) => {
-        //         ele.remove();
-        //     })
-        //     // resizing the page regenerates the stars so init is true
-        //     space.genStars(this.config.amount, this.win, this.stars, this.config, true);
-        // },
-
         // Init function which starts star gen
         // follow the chain from here
         duckClick() {
