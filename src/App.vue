@@ -13,6 +13,7 @@ export default {
     data() {
         return {
             bigBang: 0,
+            rangeAmount: 10,
             browserName: false,
             duckClicked: false,
             starAmount: false,
@@ -21,19 +22,22 @@ export default {
 
     methods: {
         onResize() {
+            this.calcStarAmount(this.rangeAmount);
             this.bigBang += 1;
         },
+
         // calculates based on the width of the window
         // divided to prevent user from crashing their pc, e.g. if set range is 100, it's width * 1. if set to 50, it's width * .5 or width / 2.
         // keep in mind, innerWidth is scaled by your OS's resolution scaling.  if it's set to 150%, your browser innerWidth is 1.5x smaller.
         // god forbid you have an 8k monitor lmfao
         calcStarAmount(amount) {
+            this.rangeAmount = amount;
             this.starAmount = Math.round(window.innerWidth * (amount * 0.01));
         }
     },
 
     created() {
-        this.calcStarAmount(5);
+        this.calcStarAmount(this.rangeAmount);
         this.browserName = checkAgent(navigator.userAgent.toLowerCase());
         window.addEventListener('resize', this.onResize);
     },
