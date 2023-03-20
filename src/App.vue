@@ -21,7 +21,6 @@ export default {
 
     methods: {
         onResize() {
-            this.calcStarAmount(this.starAmount);
             this.bigBang += 1;
         },
         // calculates based on the width of the window
