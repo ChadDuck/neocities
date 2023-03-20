@@ -1,5 +1,5 @@
 <script>
-import { Howl } from 'howler';
+// import { Howl } from 'howler';
 
 export default {
     emits: ['duckClicked', 'starAmount'],
@@ -25,9 +25,17 @@ export default {
             // this.audio = new Audio(this.audioLink);
             // this.audio.loop = true;
             //
-            this.audio = new Howl({
-                src: [this.audioLink],
+            // this.audio = new Howl({
+            //     src: [this.audioLink],
+            //     loop: true,
+            // });
+            ModPlayer.init({
                 loop: true,
+            })
+            .then(() => {
+                ModPlayer.loadModule('https://chadduck.net/polyester.mod');
+            }).catch((err) => {
+                console.log(err)
             });
         },
 
@@ -40,7 +48,7 @@ export default {
                 this.duckClicked = true;
                 this.$emit('duckClicked');
 
-                this.audio.play();
+                ModPlayer.play();
             }
         },
     },
