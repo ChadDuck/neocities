@@ -104,6 +104,9 @@ div.space {
     z-index:-99;
     width:500vw;
     height:500vh;
+    
+    min-width:468px;
+    min-height:608px;
     position:absolute;
 
     background-color: black;
