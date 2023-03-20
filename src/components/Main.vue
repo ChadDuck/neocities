@@ -102,9 +102,9 @@ div.space( :class="{ 'space-slide': duckClicked }")
 
 div.space {
     z-index:-99;
-    width:500vw;
-    height:500vh;
-    
+    width:750vw;
+    height:750vh;
+
     min-width:468px;
     min-height:608px;
     position:absolute;

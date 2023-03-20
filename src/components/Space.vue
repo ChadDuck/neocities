@@ -29,7 +29,7 @@ export default {
                 // 100 means star amount is equal to your width size, e.g. 1920 stars for 1920x1080
                 // becomes a lagfest after 0.3 - 0.5 (on 4k, runs a little better on lower res)
                 // maximum amount is set by the range element in div.options
-                ranLength: false, // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
+                ranLength: false,
             },
             starInterval: false,
             fps: 16,
@@ -71,14 +71,17 @@ export default {
                 } else {
                     genChance = !!getRanNum(0, 1);
                 }
-                
+
+
                 if (genChance) {
+                    // Spawn more stars on top edge width > height
                     starPos.top = Number('-' + getRanNum(25, 100));
                     starPos.left = getRanNum(25, win.x + 100);
 
                     style.top = starPos.top + 'px';
                     style.left = starPos.left + 'px';
                 } else {
+                    // spawn more stars on right edge if height > width
                     starPos.top = getRanNum(0, win.y - 100);
                     starPos.left = getRanNum(win.x + 25, win.x + 100);
 
@@ -169,7 +172,7 @@ export default {
     },
 
     mounted() {
-        this.config.ranLength = this.config.layer.length;
+        this.config.ranLength = this.config.layer.length; // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
 
         this.genStars(true);
         this.setAnimateLoop();
