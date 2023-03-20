@@ -29,14 +29,8 @@ export default {
             //     src: [this.audioLink],
             //     loop: true,
             // });
-            ModPlayer.init({
-                loop: true,
-            })
-            .then(() => {
-                ModPlayer.loadModule('https://chadduck.net/polyester.mod');
-            }).catch((err) => {
-                console.log(err)
-            });
+            BassoonTracker.init(true);
+            BassoonTracker.load('https://files.catbox.moe/nqkzcv.xm', false);
         },
 
         // Init function which starts star gen
@@ -48,7 +42,9 @@ export default {
                 this.duckClicked = true;
                 this.$emit('duckClicked');
 
-                ModPlayer.play();
+                // ModPlayer.play();
+                BassoonTracker.playSong();
+                // console.log(BassoonTracker.getTrackCount(), BassoonTracker.getSong())
             }
         },
     },
@@ -56,9 +52,11 @@ export default {
     mounted() {
         // old .75 speed: https://files.catbox.moe/9lryje.ogg
         // old .80 speed: https://files.catbox.moe/v3qnzq.ogg
-        this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/6t9cgy.mp3" : "https://files.catbox.moe/39x8z1.ogg";
+        // this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/6t9cgy.mp3" : "https://files.catbox.moe/39x8z1.ogg";
         this.loadAudio();
-    }
+    },
+
+
 }
 </script>
 
