@@ -119,7 +119,7 @@ div.space {
 
     &.space-slide {
         background: url("/img/SPACE22.gif") repeat;
-        animation: space-slide 5s linear infinite;
+        animation: space-slide 6s linear infinite;
     }
 }
 
@@ -146,7 +146,7 @@ div.duck-box {
         height:50px;
         cursor: pointer;
         transition: width .2s, height .2s;
-        z-index:99;
+        z-index:40;
 
         &:hover {
             width:55px;
@@ -173,7 +173,7 @@ div.menu {
 
     width:fit-content;
 
-    z-index:111;
+    z-index:99;
 }
 
 div.options {

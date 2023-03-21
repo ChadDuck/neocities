@@ -1,5 +1,6 @@
 <script>
 import { getRanNum } from '../assets/extras.js';
+import range from 'lodash.range';
 
 export default {
     props: [
@@ -22,14 +23,20 @@ export default {
             config: {
                 // speed is set for each star ele as the data-speed attr
                 // speed: [],
-                size: [0, 0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
-                layer: [0, 0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
+                // size: [0, 0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
+                speed: range(1, 15),
+                size: range(14, 48, 4),
+                layer: range(1, 25), // center duck is z-index 99
+                min: {
+                    bottom: -150,
+                    left: -150,
+                },
                 //
                 // division by multiplication against window.innerWidth, used in calcStarAmount.
                 // 100 means star amount is equal to your width size, e.g. 1920 stars for 1920x1080
                 // becomes a lagfest after 0.3 - 0.5 (on 4k, runs a little better on lower res)
                 // maximum amount is set by the range element in div.options
-                ranLength: false,
+                // ranLength: false,
             },
             starInterval: false,
             fps: 16,
@@ -42,19 +49,12 @@ export default {
                 x: window.innerWidth,
                 y: window.innerHeight,
             }
-            let style = {
-                position: 'absolute',
-                'z-index': this.config.layer[Number(ele.getAttribute('data-speed'))],
-                height: this.config.size[Number(ele.getAttribute('data-speed'))],
-            };
+            let style = {};
             let starPos = {};
 
             if (onScreen) {
-                starPos.top = getRanNum(10, win.y);
+                starPos.bottom = getRanNum(10, win.y);
                 starPos.left = getRanNum(10, win.x);
-
-                style.top = starPos.top + 'px';
-                style.left = starPos.left + 'px';
             } else {
                 let winPercent;
                 let genChance;
@@ -75,22 +75,22 @@ export default {
 
                 if (genChance) {
                     // Spawn more stars on top edge width > height
-                    starPos.top = Number('-' + getRanNum(25, 100));
+                    starPos.bottom = Number(win.y + 25,  win.y + 100);
                     starPos.left = getRanNum(25, win.x + 100);
-
-                    style.top = starPos.top + 'px';
-                    style.left = starPos.left + 'px';
                 } else {
                     // spawn more stars on right edge if height > width
-                    starPos.top = getRanNum(0, win.y - 100);
+                    starPos.bottom = getRanNum(25, win.y);
                     starPos.left = getRanNum(win.x + 25, win.x + 100);
-
-                    style.top = getRanNum(0, win.y - 100) + 'px';
-                    style.left = getRanNum(win.x + 25, win.x + 100) + 'px';
                 }
             }
 
-            ele.setAttribute('data-top', starPos.top);
+            style.position = 'absolute';
+            style['z-index'] = this.config.layer[Number(ele.getAttribute('data-speed'))];
+            style.height = this.config.size[Number(ele.getAttribute('data-speed'))] + 'px';
+            style.bottom = starPos.bottom + 'px';
+            style.left = starPos.left + 'px';
+
+            ele.setAttribute('data-bottom', starPos.bottom);
             ele.setAttribute('data-left', starPos.left);
 
             for (const prop in style) {
@@ -108,7 +108,7 @@ export default {
             star.classList.add('visStars');
 
             // data speed controls the size and layer values, set in genStarCSS
-            star.setAttribute('data-speed', getRanNum(2, this.config.ranLength - 1));
+            star.setAttribute('data-speed', this.config.speed[getRanNum(0, 13)]);
 
             star = this.genStarCSS(star, onScreen);
 
@@ -142,24 +142,20 @@ export default {
             let visStars = document.querySelectorAll('.visStars');
 
             visStars.forEach((ele) => {
-                // old
-                // let top = Number(ele.style.top.substring(0, ele.style.top.indexOf('px')));
-                // let left = Number(ele.style.left.substring(0, ele.style.left.indexOf('px')));
-
-                let top = Number(ele.getAttribute('data-top'));
+                let bottom = Number(ele.getAttribute('data-bottom'));
                 let left = Number(ele.getAttribute('data-left'));
 
-                if (left < -100 || top > (window.innerHeight + 10)) { 
+                if (left < this.config.min.left || bottom < this.config.min.bottom) { 
                     ele.remove();
                     this.genStar(false); // you can use '...arguments' here but keeping the same format for simplicity
                 } else {
-                    let newTop = top + Number(ele.getAttribute('data-speed'));
+                    let newBottom = bottom - Number(ele.getAttribute('data-speed'));
                     let newLeft = left - Number(ele.getAttribute('data-speed'));
 
-                    ele.setAttribute('data-top', newTop);
+                    ele.setAttribute('data-bottom', newBottom);
                     ele.setAttribute('data-left', newLeft);
 
-                    ele.style.top = newTop + 'px';
+                    ele.style.bottom = newBottom + 'px';
                     ele.style.left = newLeft + 'px';
                 }
             });
@@ -172,8 +168,7 @@ export default {
     },
 
     mounted() {
-        this.config.ranLength = this.config.layer.length; // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
-
+        // this.config.ranLength = this.config.layer.length; // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
         this.genStars(true);
         this.setAnimateLoop();
     },
