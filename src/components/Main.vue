@@ -30,7 +30,7 @@ export default {
             //     loop: true,
             // });
             BassoonTracker.init(true);
-            BassoonTracker.load('https://files.catbox.moe/nqkzcv.xm', false);
+            BassoonTracker.load('https://files.catbox.moe/6h491r.MOD', false);
         },
 
         // Init function which starts star gen
