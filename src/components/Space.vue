@@ -22,8 +22,8 @@ export default {
             config: {
                 // speed is set for each star ele as the data-speed attr
                 // speed: [],
-                size: [0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
-                layer: [0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
+                size: [0, 0, '10px', '15px', '20px', '25px', '30px', '35px', '40px'],
+                layer: [0, 0, 94, 95, 96, 97, 98, 101, 102], // center duck is z-index 99
                 //
                 // division by multiplication against window.innerWidth, used in calcStarAmount.
                 // 100 means star amount is equal to your width size, e.g. 1920 stars for 1920x1080
@@ -108,7 +108,7 @@ export default {
             star.classList.add('visStars');
 
             // data speed controls the size and layer values, set in genStarCSS
-            star.setAttribute('data-speed', getRanNum(1, this.config.ranLength - 1));
+            star.setAttribute('data-speed', getRanNum(2, this.config.ranLength - 1));
 
             star = this.genStarCSS(star, onScreen);
 

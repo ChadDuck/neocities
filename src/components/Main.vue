@@ -1,5 +1,5 @@
 <script>
-import { Howl } from 'howler';
+// import { Howl } from 'howler';
 
 export default {
     emits: ['duckClicked', 'starAmount'],
@@ -25,10 +25,12 @@ export default {
             // this.audio = new Audio(this.audioLink);
             // this.audio.loop = true;
             //
-            this.audio = new Howl({
-                src: [this.audioLink],
-                loop: true,
-            });
+            // this.audio = new Howl({
+            //     src: [this.audioLink],
+            //     loop: true,
+            // });
+            BassoonTracker.init(true);
+            BassoonTracker.load('https://files.catbox.moe/nqkzcv.xm', false);
         },
 
         // Init function which starts star gen
@@ -40,7 +42,9 @@ export default {
                 this.duckClicked = true;
                 this.$emit('duckClicked');
 
-                this.audio.play();
+                // ModPlayer.play();
+                BassoonTracker.playSong();
+                // console.log(BassoonTracker.getTrackCount(), BassoonTracker.getSong())
             }
         },
     },
@@ -48,9 +52,11 @@ export default {
     mounted() {
         // old .75 speed: https://files.catbox.moe/9lryje.ogg
         // old .80 speed: https://files.catbox.moe/v3qnzq.ogg
-        this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/6t9cgy.mp3" : "https://files.catbox.moe/39x8z1.ogg";
+        // this.audioLink = this.browserName === 'Safari' ? "https://files.catbox.moe/6t9cgy.mp3" : "https://files.catbox.moe/39x8z1.ogg";
         this.loadAudio();
-    }
+    },
+
+
 }
 </script>
 
