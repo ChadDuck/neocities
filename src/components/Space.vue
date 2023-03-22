@@ -1,10 +1,10 @@
 <script>
-import { getRanNum } from '../assets/extras.js';
+import { getRanNum, getRandomArbitrary } from '../assets/extras.js';
 import range from 'lodash.range';
 
 export default {
     props: [
-        'starAmount',
+        'rangeAmount',
     ],
 
     data() {
@@ -35,10 +35,15 @@ export default {
             },
             starInterval: false,
             fps: 16,
+            starAmount: 0,
         }
     },
 
     methods: {
+        calcStarAmount() {
+            this.starAmount = Math.round(window.innerWidth * (this.rangeAmount * 0.01));
+        },
+
         calcOffScreenVal(slope, initPos, offScreenVal = 100) {
             // Point Slope Form
             let intercept = {
@@ -72,36 +77,44 @@ export default {
                 // Percentage chance for star spawn position based on window size
                 // gens a *rounded* whole number percentage, 50 if screen is 1:1 and inc/dec based on ratio
                 // once gen., casts a bool if getRanNum is greater than percentage; reversed if y > x.
-                if (win.x > win.y) {
-                    winPercent = Math.round(((win.y / win.x) * 100) * 0.5);
-                    genChance = !!(getRanNum(0, 100) > winPercent);
-                } else if (win.y > win.x) {
-                    winPercent = round(((win.x / win.y) * 100) * 0.5);
+                // if (win.x > win.y) {
+                //     winPercent = Math.round(((win.y / win.x) * 100) * 0.5);
+                //     genChance = !!(getRanNum(0, 100) > winPercent);
+                // } else if (win.y > win.x) {
+                    // winPercent = Math.round(((win.x / win.y) * 100) * 0.5);
+                    // genChance = !!!(getRanNum(0, 100) > winPercent);
+                // } else {
+                //     genChance = !!getRanNum(0, 1);
+                // }
+
+                if (win.y > win.x) {
+                    winPercent = Math.round(((win.x / win.y) * 100) * 0.5);
                     genChance = !!!(getRanNum(0, 100) > winPercent);
                 } else {
                     genChance = !!getRanNum(0, 1);
                 }
+                
 
 
                 if (genChance) {
                     // Spawn more stars on top edge width > height
                     starPos.y = getRanNum(win.y + 25,  win.y + 100);
-                    starPos.x = getRanNum(50, win.x);
+                    starPos.x = getRanNum(50, win.x + 50);
                 } else {
                     // spawn more stars on right edge if height > width
                     // init spawn of height 100 is to prevent stars spawning below visible area
-                    starPos.y = getRanNum(50, win.y);
+                    starPos.y = getRanNum(50, win.y + 50);
                     starPos.x = getRanNum(win.x + 25, win.x + 100);
                 }
             }
             let starSpeed;
 
-            if (starPos.x > win.x * .5 && starPos.y < win.y * .5 || starPos.x > win.x * .5 && starPos.y > win.y * .5) {
-                starSpeed = Number(ele.getAttribute('data-speed')) * 2;
-                style.height = this.config.size[Math.round(starSpeed)] + 'px';
+            if (starPos.x < win.x * .3 || starPos.x > win.x * .75 && starPos.y < win.y * .3) {
+                starSpeed = Number(ele.getAttribute('data-speed')) * getRandomArbitrary(1,2);
+                style.height = this.config.size[getRanNum(5, 18)] + 'px';
             } else {
                 starSpeed = Number(ele.getAttribute('data-speed'));
-                style.height = this.config.size[Math.round(starSpeed * .005)] + 'px';
+                style.height = this.config.size[getRanNum(16, 34)] + 'px';
             }
 
             // let starSpeed = starPos.x < 100 || starPos.y < 100 ? 1000 : Number(ele.getAttribute('data-speed'));
@@ -141,7 +154,8 @@ export default {
             star.classList.add('visStars');
 
             // data speed controls the size and layer values, set in genStarCSS
-            star.setAttribute('data-speed', getRanNum(0, 4499));
+            star.setAttribute('data-speed', getRanNum(2000, 4499));
+            star.setAttribute('data-star', getRanNum(0, this.starAmount - 1));
 
             star = this.genStarCSS(star, onScreen);
 
@@ -149,7 +163,7 @@ export default {
 
             Promise.all(
                 star.getAnimations().map((animation) => animation.finished)
-            ).then(() => { star.remove(); this.genStar(false); });
+            ).then(async () => { await this.reGenStar(star); });
         },
 
         // only used for initial page load
@@ -159,14 +173,25 @@ export default {
             }
         },
 
+        async reGenStar(starEle) {
+            let visStars = document.querySelectorAll('.visStars');
+
+            if (this.starAmount > visStars.length) {
+                starEle.remove();
+                this.genStar();
+            } else {
+                starEle.remove();
+            }
+        },
+
         // will add each star one by one as user changes range bar
         // 
-        changeStarAmount() {
+        changeStarAmount(onScreen = true) {
             let visStars = document.querySelectorAll('.visStars');
 
             if (this.starAmount > visStars.length) {
                 for (let i = 0; i < this.starAmount - visStars.length; i++) {
-                    this.genStar(true);
+                    this.genStar(onScreen);
                 }
             } else {
                 for (let i = 0; i < visStars.length - this.starAmount; i++) {
@@ -209,6 +234,7 @@ export default {
     },
 
     mounted() {
+        this.calcStarAmount();
         this.config.ranLength = this.config.layer.length; // no reason for picking layer vs size, maybe faster to parse because int values? ¯\ (ツ) /¯
 
         this.genStars(true);
@@ -220,7 +246,8 @@ export default {
     },
 
     watch: {
-        starAmount() {
+        rangeAmount() {
+            this.calcStarAmount();
             this.changeStarAmount();
         }
     }

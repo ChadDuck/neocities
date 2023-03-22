@@ -23,3 +23,7 @@ export function getRanNum(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min); // ROUND, not FLOOR.  Keep in mind when using in ranges or selecting array values.
 };
+
+export function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
